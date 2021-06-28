@@ -3,6 +3,7 @@ import 'package:formvalidation/pages/home_page.dart';
 import 'package:formvalidation/pages/login_page.dart';
 
 import 'bloc/provider.dart';
+import 'pages/product_page.dart';
 
 void main() => runApp(MyApp());
 
@@ -13,10 +14,11 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Material App',
-      initialRoute: 'login',
+      initialRoute: 'home',
       routes: {
         'login': (BuildContext context) => LoginPage(),
         'home': (BuildContext context) => HomePage(),
+        'product': (BuildContext context) => ProductPage()
       },
     ));
   }
