@@ -4,7 +4,7 @@ import 'package:formvalidation/bloc/provider.dart';
 import 'package:formvalidation/providers/user_provider.dart';
 import 'package:formvalidation/utils/utils.dart';
 
-class LoginPage extends StatelessWidget {
+class RegisterPage extends StatelessWidget {
   final userProvider = new UserProvider();
 
   @override
@@ -112,7 +112,7 @@ class LoginPage extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  'Login',
+                  'Register',
                   style: TextStyle(fontSize: 20),
                 ),
                 SizedBox(height: 60),
@@ -126,8 +126,8 @@ class LoginPage extends StatelessWidget {
           ),
           FlatButton(
               onPressed: () =>
-                  Navigator.of(context).pushReplacementNamed('register'),
-              child: Text("Don't you have a user yet? Register")),
+                  Navigator.of(context).pushReplacementNamed('login'),
+              child: Text('Are you already register? Login')),
           SizedBox(height: 100)
         ],
       ),
@@ -171,7 +171,7 @@ class LoginPage extends StatelessWidget {
                 color: Colors.deepPurple,
                 textColor: Colors.white,
                 onPressed:
-                    snapshot.hasData ? () => _login(bloc, context) : null));
+                    snapshot.hasData ? () => _register(bloc, context) : null));
       },
     );
   }
@@ -198,9 +198,9 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  _login(LoginBloc bloc, BuildContext context) async {
+  _register(LoginBloc bloc, BuildContext context) async {
     Map<String, dynamic> info =
-        await userProvider.login(bloc.email, bloc.password);
+        await userProvider.newUser(bloc.email, bloc.password);
 
     if (info['ok']) {
       Navigator.of(context).pushReplacementNamed('home');

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:formvalidation/models/product_model.dart';
+import 'package:formvalidation/user_preferences/user_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:mime_type/mime_type.dart';
 import 'package:http_parser/http_parser.dart';
@@ -10,8 +11,10 @@ class ProductsProvider {
   final String _url =
       'https://flutter-various-19dc3-default-rtdb.firebaseio.com';
 
+  final _prefs = new UserPreferences();
+
   Future<bool> createProduct(ProductModel productModel) async {
-    final url = '$_url/products.json';
+    final url = '$_url/products.json?auth=${_prefs.token}';
 
     final response =
         await http.post(url, body: productModelToJson(productModel));
@@ -24,7 +27,7 @@ class ProductsProvider {
   }
 
   Future<List<ProductModel>> loadProducts() async {
-    final url = '$_url/products.json';
+    final url = '$_url/products.json?auth=${_prefs.token}';
 
     final response = await http.get(url);
 
@@ -44,7 +47,7 @@ class ProductsProvider {
   }
 
   Future<bool> deleteProduct(ProductModel product) async {
-    final url = '$_url/products/${product.id}.json';
+    final url = '$_url/products/${product.id}.json?auth=${_prefs.token}';
 
     final response = await http.delete(url);
 
@@ -54,7 +57,7 @@ class ProductsProvider {
   }
 
   Future<bool> editProduct(ProductModel product) async {
-    final url = '$_url/products/${product.id}.json';
+    final url = '$_url/products/${product.id}.json?auth=${_prefs.token}';
 
     final response = await http.put(url, body: productModelToJson(product));
 
