@@ -37,6 +37,8 @@ class ProductsProvider {
 
     if (decodedData == null) return [];
 
+    if (decodedData['error'] != null) return [];
+
     decodedData.forEach((id, product) {
       final productTemp = ProductModel.fromJson(product);
       productTemp.id = id;

@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:formvalidation/bloc/products_bloc.dart';
 import 'package:formvalidation/bloc/provider.dart';
 import 'package:formvalidation/models/product_model.dart';
-import 'package:formvalidation/providers/products_providers.dart';
-import 'package:formvalidation/providers/products_providers.dart';
 
 class HomePage extends StatelessWidget {
-  final productsProvider = new ProductsProvider();
-
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of(context);
+    final productsBloc = Provider.productsBloc(context);
+    productsBloc.loadProducts();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.deepPurple,
         centerTitle: true,
         title: Text('Home'),
       ),
-      body: _createProductList(),
+      body: _createProductList(productsBloc),
       floatingActionButton: _createButton(context),
     );
   }
@@ -28,16 +26,17 @@ class HomePage extends StatelessWidget {
         onPressed: () => Navigator.pushNamed(context, 'product'));
   }
 
-  Widget _createProductList() {
-    return FutureBuilder(
-        future: productsProvider.loadProducts(),
+  Widget _createProductList(ProductsBloc productsBloc) {
+    return StreamBuilder(
+        stream: productsBloc.productStream,
         builder:
             (BuildContext context, AsyncSnapshot<List<ProductModel>> snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(
                 itemCount: snapshot.data.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return _createProduct(context, snapshot.data[index]);
+                  return _createProduct(
+                      context, snapshot.data[index], productsBloc);
                 });
           }
 
@@ -48,22 +47,16 @@ class HomePage extends StatelessWidget {
         });
   }
 
-  Widget _createProduct(BuildContext context, ProductModel product) {
+  Widget _createProduct(
+      BuildContext context, ProductModel product, ProductsBloc productsBloc) {
     return Dismissible(
       key: UniqueKey(),
       background: Container(
         color: Colors.red,
       ),
       onDismissed: (direction) {
-        productsProvider.deleteProduct(product);
+        productsBloc.deleteProduct(product);
       },
-      // child: ListTile(
-      //   title: Text('${product.title} - ${product.value}'),
-      //   subtitle: Text('${product.available}'),
-      //   onTap: () {
-      //     Navigator.pushNamed(context, 'product', arguments: product);
-      //   },
-      // ),
       child: Card(
         child: Column(
           children: [
